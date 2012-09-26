@@ -25,7 +25,7 @@ module AbacosIntegrationMonitor
 
     def load_new_records
       Order.from_checkpoint(@checkpoint.head).collect { |order| 
-        OrderIntegrationRecord.new(nil,nil,nil,order,nil, 0)
+        OrderIntegrationRecord.new(nil,nil,nil,order,nil,0)
       }    
     end
 

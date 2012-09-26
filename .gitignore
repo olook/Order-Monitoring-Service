@@ -1,3 +1,4 @@
+*.yml
 .rvmrc
 *.output
 *.pid
