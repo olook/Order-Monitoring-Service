@@ -1,6 +1,8 @@
 module AbacosIntegrationMonitor
   class OrderProcessingService
 
+    NUMBER_OF_ATTEMPTS = 4
+
     include Observable
 
     attr_reader :checkpoint, :integration_records
@@ -16,20 +18,24 @@ module AbacosIntegrationMonitor
     end
 
     def load_failed_integration_records
-      checkpoint.integration_records.clone.keep_if { |ir| ir.status == "FAILED"}
+      checkpoint.integration_records.clone.keep_if { |ir| 
+        (ir.status == "FAILED" && ir.num_of_attempts.to_i <= NUMBER_OF_ATTEMPTS)
+      }
     end
 
     def load_new_records
-      Order.from_checkpoint(@checkpoint.head).collect { |order| OrderIntegrationRecord.new(nil,nil,nil,order,nil)}    
+      Order.from_checkpoint(@checkpoint.head).collect { |order| 
+        OrderIntegrationRecord.new(nil,nil,nil,order,nil, 0)
+      }    
     end
 
     def process
       reload!
       load_integration_records
       if !integration_records.empty?
-        integration_records.each do |order|
+        integration_records.each do |record|
           changed
-          notify_observers(order)
+          notify_observers(record)
         end
       end
     end

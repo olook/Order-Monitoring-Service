@@ -16,7 +16,7 @@ module AbacosIntegrationMonitor
       begin
         parse_file
       rescue => e
-        puts "There was an exception while parsing the file: #{e}"
+        puts "There was an exception while parsing the file #{e.message}"
       end
     end
 

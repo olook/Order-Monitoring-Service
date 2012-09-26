@@ -6,10 +6,10 @@ general:
   process:
     app_name: "Order Monit Service"
     ontop: true # if true the process is not sent to the background
-    log_output: true # writes an output file, good option for a background process
+    log_output: true # writes an output file, you may want to use this option for a background process
     backtrace: true
   running_cycle_frequency: 120 #seconds, the same time used to verify new orders
-  number_of_integration_retries: 2
+  number_of_attempts: 4
 
 email:
   smtp:
@@ -26,7 +26,6 @@ integration_server:
   host: "homolog.olook.com.br"
   port: 13630
   username: "root"
-  password: ""
   rails_root: "/srv/olook/current"
 
 database:

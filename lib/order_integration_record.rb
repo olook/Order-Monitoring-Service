@@ -1,9 +1,9 @@
 class OrderIntegrationRecord
 
-  attr_accessor :id, :created_at, :updated_at, :order, :status
+  attr_accessor :id, :created_at, :updated_at, :order, :status, :num_of_attempts
 
-  def initialize(id, created_at, updated_at, order, status)
-    @id, @created_at, @updated_at, @status = id, created_at, updated_at, status
+  def initialize(id, created_at, updated_at, order, status, num_of_attempts=0)
+    @id, @created_at, @updated_at, @status, @num_of_attempts = id, created_at, updated_at, status
     @order = order.instance_of?(Order) ? order : Order.find(order)
     new_record?(@id)
   end

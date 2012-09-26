@@ -3,6 +3,6 @@ require 'active_record'
 
 class Order < ActiveRecord::Base
 
- scope :from_checkpoint, lambda {|id| where('id > ? AND id < 520', id) }
+ scope :from_checkpoint, lambda {|id| where('id > ?', id).limit(10) }
 
 end

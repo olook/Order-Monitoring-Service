@@ -1,7 +1,7 @@
 module AbacosIntegrationMonitor
   class OrderIntegrationService
 
-    INTEGRATION_SRV_CONFIG = CONFIG[:integration_server]
+    SRV_CONFIG = CONFIG[:integration_server]
 
     ALERT_TYPE = {:failure => "Integration Failed",:error => "Exception"}
 
@@ -14,35 +14,37 @@ module AbacosIntegrationMonitor
     end
 
     def lazy_initialize
-      @rbox = Rye::Box.new(INTEGRATION_SRV_CONFIG[:host], :user => INTEGRATION_SRV_CONFIG[:username], 
-      :password => INTEGRATION_SRV_CONFIG[:password], :port => INTEGRATION_SRV_CONFIG[:port], :safe => false)
-      @rbox[INTEGRATION_SRV_CONFIG[:rails_root]]
+      @rbox = Rye::Box.new(SRV_CONFIG[:host],:user => SRV_CONFIG[:username], :port => SRV_CONFIG[:port], :safe => false)
+      @rbox[SRV_CONFIG[:rails_root]]
     end
 
     def update(record)
+      status = nil
       integration_record = nil
       order = record.order
       begin
         if Abacos::OrderAPI.order_exists?(order.number)
-          integration_record = OrderIntegrationRecordBuilder.build(record, STATUS[:success])
+          status = STATUS[:success]
+         # integration_record = OrderIntegrationRecordBuilder.build(record, STATUS[:success])
         else
+          status = STATUS[:failed]
           changed
           lazy_initialize
           notify_observers(ALERT_TYPE[:failure], record)
-          integration_record = OrderIntegrationRecordBuilder.build(record, STATUS[:failed])
+         # integration_record = OrderIntegrationRecordBuilder.build(record, STATUS[:failed])
           insert_order(order.number)
           confirm_payment(order.number) if order.state == "authorized"
         end
       rescue Errno::ETIMEDOUT => error
         puts "Local internet access or Abacos is down: #{error.message}"
       rescue Wasabi::Resolver::HTTPError => error
-        puts "Error while communicating with Abacos server! Code: #{error.message.code}"
+        puts "Error while communicating with Abacos. HTTP error code: #{error.message.code}"
       rescue Exception => error
         puts "Critical exception: #{error.message}"
       ensure
-        if !integration_record.nil? 
+        if !status.nil? 
           @checkpoint.open_atomically(@checkpoint.file_path) do |new_file|
-            new_file.puts @checkpoint.write_buffer(integration_record)
+            new_file.puts @checkpoint.write_buffer(OrderIntegrationRecordBuilder.build(record, status))
           end
         end
       end
