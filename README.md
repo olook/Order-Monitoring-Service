@@ -1,5 +1,5 @@
-== Introduction ==
-
+Introduction
+============
 
 This is a monitoring service which aims to periodically check if all orders were successfully integrated with Abacos. 
 
@@ -12,7 +12,8 @@ Some important design decisions:
 4 - The checkpoint file is a lightweight alternative for maintaining the app state . Using a DBMS would introduce an unnecessary overhead
 
 
-== Setup ==
+Setup
+============
 
 general:
   process:
@@ -37,8 +38,8 @@ It is not necessary to provide a password, if the integration_server has the cli
   password: "mypass"
   rails_root: "/srv/olook/current"
 
-== Running the app ==
-
+Running the app
+============
 ruby order_monit_service.rb start will start the process. 
     app_name: "Order Monit Service"
     ontop: false # if true the process is not sent to the background
