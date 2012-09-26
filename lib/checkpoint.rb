@@ -1,29 +1,33 @@
-require 'fileutils'
-require 'tempfile'
-
 module AbacosIntegrationMonitor
   class Checkpoint
     
     include Singleton
 
-    attr_reader :integration_records, :filename
+    attr_reader :integration_records, :file_path
 
-    def initialize(filename='checkpoint')
-      @filename, @integration_records, @pointer = filename, [], {}
+    def initialize
+      @integration_records, @pointer = [], {}
+      @file_path = File.join(File.dirname(__FILE__), "checkpoint")
     end
 
     def reload!
-      @integration_records.clear
+      integration_records.clear
       @pointer.clear
-      parse_file
+      begin
+        parse_file
+      rescue => e
+        puts "There was an exception while parsing the file: #{e}"
+      end
     end
 
     def parse_file
-      file = File.open(File.dirname(__FILE__)+"/"+@filename, 'r').readlines
+      file = File.open(@file_path).readlines
       file.each_with_index do |line, i|
         integration_records << OrderIntegrationRecord.new(*line.split(" "))
         @pointer[i] = line.split(" ")[3] if line.include?("^HEAD")
       end
+      raise "The checkpoint file is empty" if integration_records.empty?
+      raise "Error parsing file: ^HEAD is missing?" if (head.nil? || index.nil?)
     end
 
     def head

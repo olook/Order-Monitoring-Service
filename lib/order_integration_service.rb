@@ -34,12 +34,14 @@ module AbacosIntegrationMonitor
           confirm_payment(order.number) if order.state == "authorized"
         end
       rescue Errno::ETIMEDOUT => error
-        puts "Local internet access or Abacos is down: #{error}"
+        puts "Local internet access or Abacos is down: #{error.message}"
+      rescue Wasabi::Resolver::HTTPError => error
+        puts "Error while communicating with Abacos server! Code: #{error.message.code}"
       rescue Exception => error
-        puts "Critical exception: #{error}"
+        puts "Critical exception: #{error.message}"
       ensure
         if !integration_record.nil? 
-          @checkpoint.open_atomically(File.dirname(__FILE__) + "/" + @checkpoint.filename) do |new_file|
+          @checkpoint.open_atomically(@checkpoint.file_path) do |new_file|
             new_file.puts @checkpoint.write_buffer(integration_record)
           end
         end

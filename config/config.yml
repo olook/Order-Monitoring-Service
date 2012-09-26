@@ -5,7 +5,7 @@
 general:
   process:
     app_name: "Order Monit Service"
-    ontop: false # if true the process is not sent to the background
+    ontop: true # if true the process is not sent to the background
     log_output: true # writes an output file, good option for a background process
     backtrace: true
   running_cycle_frequency: 120 #seconds, the same time used to verify new orders
@@ -16,22 +16,18 @@ email:
     address: 'smtp.gmail.com'
     port: 587
     enable_starttls_auto: true
-    user_name: 'felipe.japm'
-    password: 'JVtxROb0W5hFWwLPEBeqrp4i'
+    user_name: 'myuser'
+    password: 'mypass'
     authentication: :plain
   subscribers:
-    - felipe.japm@gmail.com  
+    - myemail@gmail.com  
 
 integration_server:
-  #host: "homolog.olook.com.br"
-  host: "localhost"
-  #port: 13630
-  port: 22
-  #username: "root"
-  username: "felipe"
-  password: "s8872849"
-  #rails_root: "/srv/olook/current"
-  rails_root: "/home/felipe/projetos/Olook/olook"
+  host: "homolog.olook.com.br"
+  port: 13630
+  username: "root"
+  password: ""
+  rails_root: "/srv/olook/current"
 
 database:
   adapter: mysql2
