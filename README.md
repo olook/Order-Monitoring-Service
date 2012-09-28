@@ -13,7 +13,7 @@ Some important design decisions:
 Dependencies
 ============
 
-The only external dependency from this service is the rake task _insert\_order_ and _confirm\_payment_. As commented above, the monitoring service doesn't care if the internal logic of how to insert an order and how to confirm a paytment changes, as long as both still implement `Abacos::InsertOrder.perform(order\_number)` and `Abacos::ConfirmPayment.perform(order\_number)`
+The only external dependency from this service is the rake task _insert\_order_ and _confirm\_payment_. As commented above, the monitoring service doesn't care if the internal logic of how to insert an order and how to confirm a paytment changes, as long as both still implement `Abacos::InsertOrder.perform(order_number)` and `Abacos::ConfirmPayment.perform(order_number)`
 
 
 Setup
@@ -21,26 +21,35 @@ Setup
 
 First run `bundle install`
 
-Then set up your configurations on config/config.yml as below:
+Then set up your configurations on config. The service.yml and process.yml are explained below:
 
-```config
-general:
-  process:
-    app_name: "Order Monit Service"
-    ontop: false # if true the process is not sent to the background
-    log_output: true # writes an output file, good when running as a background process
-    backtrace: true
-  running_cycle_frequency: 120 # seconds, the same time used to verify new orders
-  number_of_integration_retries: 2 # number of times that the system should retry when facing a failure
+The _service.yml_ file
 
-  integration_server:
-  host: "homolog.olook.com.br"
-  port: 13630
-  username: "felipe"
-  password: "mypass"
-  rails_root: "/srv/olook/current"
+```service
+running_cycle: 120 #seconds, the same time used to verify new orders
+max_attempts: 4 # maximum number of attempts to integration in case of failure
+max_orders_per_request: 5 # maximum number of new order returned per cycle
+downtime_wait: 30 # seconds to wait before reconnecting to Abacos, in case of downtime
 ```
-It is not necessary to provide a password, if the *integration\_server* has the client's *public key* id\_rsa.pub
+The _process.yml_ file
+
+```process
+app_name: "Order Monit Service"
+ontop: true # if true the process is not sent to the background
+log_output: true # writes an output file, you may want to use this option for a background process
+backtrace: true
+```
+The _integration\_server.yml_  file
+
+```integration_server
+host: "homolog.olook.com.br"
+port: 13630
+username: "root"
+rails_root: "/srv/olook/current
+```
+
+The authentication with the *integration\_server* happens through the *public key* `~./ssh/id_rsa.pub` of the machine
+running the service
 
 Running the app
 ============
