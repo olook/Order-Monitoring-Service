@@ -13,7 +13,7 @@ Some important design decisions:
 Dependecies
 ============
 
-The only external dependency from this service is the rake task _insert\_order_ and _confirm\_payment_. As commented above, the monitoring service doesn't care if the internal logic of how to insert an order and how to confirm a paytment changes, as long as both still implement Abacos::InsertOrder.perform(order\_number) and Abacos::ConfirmPayment.perform(order\_number)
+The only external dependency from this service is the rake task _insert\_order_ and _confirm\_payment_. As commented above, the monitoring service doesn't care if the internal logic of how to insert an order and how to confirm a paytment changes, as long as both still implement `Abacos::InsertOrder.perform(order\_number)` and `Abacos::ConfirmPayment.perform(order\_number)`
 
 
 Setup
