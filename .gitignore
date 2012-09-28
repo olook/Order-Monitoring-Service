@@ -1,5 +1,5 @@
-config/config.yml
+config/*.yml
 .rvmrc
 *.output
 *.pid
-lib/checkpoint
+data/checkpoint
