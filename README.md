@@ -10,7 +10,7 @@ Some important design decisions:
 - To minimize complexity, the service is single threaded. At a specified given period, the service retries to integrate failed orders, checks for new orders, and atomically write each operation to a "checkpoint" file.
 - The checkpoint file is a lightweight alternative for maintaining the service state, as a DBMS would be an overkill
 
-Dependecies
+Dependencies
 ============
 
 The only external dependency from this service is the rake task _insert\_order_ and _confirm\_payment_. As commented above, the monitoring service doesn't care if the internal logic of how to insert an order and how to confirm a paytment changes, as long as both still implement `Abacos::InsertOrder.perform(order\_number)` and `Abacos::ConfirmPayment.perform(order\_number)`
