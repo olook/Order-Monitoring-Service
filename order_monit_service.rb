@@ -1,19 +1,17 @@
-# require 'observer'
-# require 'pony'
-# require 'singleton'
-# require 'rye'
-# require 'daemons'
-# require 'fileutils'
-# require 'tempfile'
-# require 'active_record'
-require 'rubygems'
+require 'observer'
+require 'pony'
+require 'singleton'
+require 'rye'
+require 'daemons'
+require 'fileutils'
+require 'tempfile'
+require 'active_record'
 
 Dir[(File.dirname(__FILE__)+"/lib/**/")].each{|load_path| $: << load_path}
 Dir[File.join("lib", "**", "*.rb")].each {|file| require File.basename(file) }
 
-extend AbacosIntegrationMonitor
+extend OrderMonitService
 
-APP_CONFIG = CONFIG[:general]
-PROCESS_CONFIG = APP_CONFIG[:process]
+load_system_configuration
 
-Daemons.run('app.rb',PROCESS_CONFIG)
+Daemons.run('main.rb',PROCESS_CONFIG)

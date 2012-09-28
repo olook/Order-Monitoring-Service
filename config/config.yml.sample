@@ -9,7 +9,7 @@ general:
     log_output: true # writes an output file, you may want to use this option for a background process
     backtrace: true
   running_cycle_frequency: 600 #seconds, the same time used to verify new orders
-  number_of_attempts: 4
+  number_of_attempts: 4 # number of times that the system should retry when facing a failure
 
 email:
   smtp:

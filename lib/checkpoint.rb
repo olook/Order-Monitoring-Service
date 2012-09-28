@@ -1,5 +1,4 @@
-module AbacosIntegrationMonitor
-  class Checkpoint
+class Checkpoint
     
     include Singleton
 
@@ -7,7 +6,7 @@ module AbacosIntegrationMonitor
 
     def initialize
       @integration_records, @pointer = [], {}
-      @file_path = File.join(File.dirname(__FILE__), "checkpoint")
+      @file_path = File.join(File.dirname(__FILE__),"..","data","checkpoint")
     end
 
     def reload!
@@ -64,4 +63,3 @@ module AbacosIntegrationMonitor
       result
     end
   end
-end
