@@ -1,0 +1,4 @@
+app_name: "Order Monit Service"
+ontop: true # if true the process is not sent to the background
+log_output: true # writes an output file, you may want to use this option for a background process
+backtrace: true

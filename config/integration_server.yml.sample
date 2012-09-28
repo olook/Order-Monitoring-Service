@@ -1,0 +1,7 @@
+integration_server:
+  host: "homolog.olook.com.br"
+  port: 13630
+  username: "root"
+  rails_root: "/srv/olook/current"
+  insert_order_cmd: "nohup bundle exec rake order_integration_service:insert_order[#{number}] > /dev/null 2>&1 &"
+  confirm_payment_cmd: "nohup bundle exec rake order_integration_service:confirm_payment[#{number}] > /dev/null 2>&1 &"

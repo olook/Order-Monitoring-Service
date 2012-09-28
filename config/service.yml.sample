@@ -1,0 +1,4 @@
+# Configuration file
+running_cycle: 120 #seconds, the same time used to verify new orders
+max_attempts: 4
+max_orders_retrieved: 5
