@@ -10,10 +10,12 @@ module Abacos
     end
 
     def self.order_exists?(order_number)
+      status = {}
       payload = {'ListaDeNumerosDePedidos' => {'string' => order_number}}
       payload["ChaveIdentificacao"] = Abacos::Helpers::API_KEY
       response = call_webservice(wsdl, :pedido_existe, payload)
-      error_container = response[:rows][:dados_pedidos_existentes][:existente]
+      status[response[:rows][:dados_pedidos_existentes][:status_atual]] = response[:rows][:dados_pedidos_existentes][:existente]
+      status
     end
 
   end
