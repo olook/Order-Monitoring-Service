@@ -6,7 +6,7 @@ class AlertMailer
     end
 
     def update(email)
-      Pony.mail(:to => @config[:subscribers], :subject => email.subject,:body => email.body)
+      Pony.mail(:to => @config[:subscribers], :subject => email.subject,:html_body => email.html_body)
     end
 
 end

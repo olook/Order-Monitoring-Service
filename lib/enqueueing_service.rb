@@ -24,7 +24,7 @@ class EnqueueingService
 
     def load_new_records
       connect
-      Order.from_checkpoint(@checkpoint.head).collect { |order| 
+      Order.from_checkpoint(@checkpoint.head).delayed(1800).collect { |order| 
         OrderIntegrationRecord.new(nil,nil,nil,order,nil,0)
       }    
     end
