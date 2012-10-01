@@ -10,7 +10,7 @@ class ErrorMail
     "An error occurred: #{@message}"
   end
 
-  def body
+  def html_body
     "There is a problem with the order integration service: #{@message}"
   end
 
