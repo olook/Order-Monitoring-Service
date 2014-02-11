@@ -31,11 +31,15 @@ class EnqueueingService
 
     def process
       reload!
+      puts 'loading records'
       load_integration_records
+      puts 'records loaded'
       if !integration_records.empty?
         integration_records.each do |record|
+          puts "analysing record #{record.order.number}"
           changed
           notify_observers(record)
+          puts "finished order"
         end
       end
     end

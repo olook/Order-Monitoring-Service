@@ -12,13 +12,15 @@ class IntegrationService
 
   def update(record)
     begin
+      puts "finding order #{record.order.number} on abacos"
       abacos_response = Abacos::OrderAPI.order_exists?(record.order.number)
+      puts "response: #{abacos_response}"
       # TODO - Code Refactor (abacos_response)
       if abacos_response.values[0] == true
         if abacos_response.keys[0] == "tspeeEmAndamento" && record.order.state == "authorized"
-          integration_record = OrderIntegrationRecordBuilder.build(record, STATUS[:failed], "PAYMENT_PENDING")
-          changed
-          notify_observers(PendingPaymentMail.new(record))
+          #integration_record = OrderIntegrationRecordBuilder.build(record, STATUS[:failed], "PAYMENT_PENDING")
+          #changed
+          #notify_observers(PendingPaymentMail.new(record))
         else
           integration_record = OrderIntegrationRecordBuilder.build(record, STATUS[:success], "OK")
         end
@@ -26,7 +28,9 @@ class IntegrationService
         integration_record = OrderIntegrationRecordBuilder.build(record, STATUS[:failed], "NOT_FOUND")
         changed
         notify_observers(FailureMail.new(record))
+        puts "connecting.... #{@config}"
         connect(@config[:host], @config[:username], @config[:port], @config[:rails_root])
+        puts "connected"
         insert_order(record.order.number)
       end
 
@@ -43,8 +47,13 @@ class IntegrationService
       puts "#{error.message}"
       notify_observers(ErrorMail.new("Critical exception: #{error.class} #{error.message}"))
     ensure
+        puts "should write it on disk?"
         if !integration_record.nil? 
+          puts "true"
           write_to_checkpoint_file(integration_record)
+          puts "written."
+        else
+          puts "false"
         end
     end
   end

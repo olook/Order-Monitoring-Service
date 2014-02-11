@@ -5,8 +5,12 @@ integration_service = IntegrationService.new(INTEGRATION_SERVER_CONFIG,SERVICE_C
 queueing_service.add_observer(integration_service)
 integration_service.add_observer(AlertMailer.new(EMAIL_CONFIG))
 loop {
-  queueing_service.process
-  puts "Waiting..."
-  sleep(SERVICE_CONFIG[:running_cycle])
-  puts "Processing..."
+  begin
+    queueing_service.process
+    puts "Waiting..."
+    sleep(SERVICE_CONFIG[:running_cycle])
+    puts "Processing..."
+  rescue => e
+    puts "error: #{e}"
+  end
 }
