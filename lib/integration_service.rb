@@ -48,6 +48,7 @@ class IntegrationService
     rescue Exception => error
       changed
       puts "#{error.message}"
+      puts "#{error.backtrace}"
       notify_observers(ErrorMail.new("Critical exception: #{error.class} #{error.message}"))
     ensure
         puts "should write it on disk?"
