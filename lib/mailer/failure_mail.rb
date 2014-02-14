@@ -1,6 +1,7 @@
 class FailureMail
 
   def initialize(record)
+    puts "inicializado o email de falha com #{record}"
     @record = record
   end
 
