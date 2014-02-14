@@ -25,9 +25,12 @@ class IntegrationService
           integration_record = OrderIntegrationRecordBuilder.build(record, STATUS[:success], "OK")
         end
       else
+        puts "registro nao encontrado no abacos"
         integration_record = OrderIntegrationRecordBuilder.build(record, STATUS[:failed], "NOT_FOUND")
         changed
+        puts "enviando email..."
         notify_observers(FailureMail.new(record))
+        puts "email enviado."
         puts "connecting.... #{@config}"
         connect(@config[:host], @config[:username], @config[:port], @config[:rails_root])
         puts "connected"
