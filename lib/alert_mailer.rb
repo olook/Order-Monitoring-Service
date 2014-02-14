@@ -7,8 +7,11 @@ class AlertMailer
     end
 
     def update(email)
-      puts "email para: #{email}"
+      puts "email para: #{@config[:subscribers]}"
+      puts "subject: #{email.subject}"
+      puts "body: #{email.html_body}"
       Pony.mail(:to => @config[:subscribers], :subject => email.subject,:html_body => email.html_body)
+      puts "enviado"
     end
 
 end
