@@ -7,6 +7,8 @@ require 'fileutils'
 require 'tempfile'
 require 'active_record'
 
+require './lib/order_monit_service.rb'
+
 Dir[(File.dirname(__FILE__)+"/lib/**/")].each{|load_path| $: << load_path}
 require 'connectable'
 Dir[File.join("lib", "**", "*.rb")].each {|file| require File.basename(file) }
