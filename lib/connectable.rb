@@ -2,7 +2,7 @@ module Connectable
 
   def connect(host, username, port, rails_root)
     puts "creating connection to integration server #{[host, username, port, rails_root]}"
-    @rbox = Rye::Box.new(host,:user => username, :port => port, :safe => false, :keys => ["/home/ubuntu/.ssh/gsg-keypair"]})
+    @rbox = Rye::Box.new(host,:user => username, :port => port, :safe => false, :keys => ["/home/ubuntu/.ssh/gsg-keypair"])
     @rbox[rails_root]
   end
 
