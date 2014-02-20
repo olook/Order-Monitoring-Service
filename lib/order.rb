@@ -5,6 +5,8 @@ class Order < ActiveRecord::Base
  def self.delayed time
   date = Time.now - time
   puts "Data limite: #{date}"
-  from_checkpoint(Checkpoint.instance.head).select{|order| order.created_at <= date}
+  orders = from_checkpoint(Checkpoint.instance.head).select{|order| order.created_at <= date}
+  puts order.map(&:created_at)
+  orders
  end
 end
