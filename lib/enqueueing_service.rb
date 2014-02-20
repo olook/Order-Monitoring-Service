@@ -24,9 +24,10 @@ class EnqueueingService
 
     def load_new_records
       connect
-      Order.delayed(1800).collect { |order| 
+      orders = Order.delayed(1800).collect { |order| 
         OrderIntegrationRecord.new(nil,nil,nil,order,nil,0)
       }    
+      puts "Loaded #{orders.size}"
     end
 
     def process
