@@ -28,6 +28,7 @@ class EnqueueingService
         OrderIntegrationRecord.new(nil,nil,nil,order,nil,0)
       }    
       puts "Loaded #{orders.size}"
+      orders
     end
 
     def process
