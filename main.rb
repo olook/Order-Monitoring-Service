@@ -7,8 +7,9 @@ integration_service.add_observer(AlertMailer.new(EMAIL_CONFIG))
 loop {
   begin
     queueing_service.process
-    puts "Waiting..."
-    sleep(SERVICE_CONFIG[:running_cycle])
+    puts "Waiting... for 30 seconds"
+    #sleep(SERVICE_CONFIG[:running_cycle])
+    sleep(30)
     puts "Processing..."
   rescue => e
     puts "error: #{e}"

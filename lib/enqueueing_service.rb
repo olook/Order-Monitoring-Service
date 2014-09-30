@@ -12,14 +12,22 @@ class EnqueueingService
     end
 
     def load_integration_records
-      integration_records << load_failed_integration_records + load_new_records
+      puts 'loading new records'
+      new_records = load_new_records
+      puts 'loading failed records'
+      faileds = load_failed_integration_records
+
+      puts 'records loaded'
+      integration_records << faileds + new_records
       integration_records.flatten!
     end
 
     def load_failed_integration_records
-      checkpoint.integration_records.clone.keep_if { |ir| 
+      faileds = checkpoint.integration_records.clone.keep_if { |ir| 
         (ir.status == "FAILED" && ir.num_of_attempts.to_i <= @max_attempts )
       }
+      puts "faileds: #{faileds.size}"
+      faileds
     end
 
     def load_new_records
@@ -27,12 +35,15 @@ class EnqueueingService
       orders = Order.delayed(1800).collect { |order| 
         OrderIntegrationRecord.new(nil,nil,nil,order,nil,0)
       }    
-      puts "Loaded #{orders.size}"
+      puts "Loaded new records #{orders.size}"
       orders
     end
 
     def process
+	puts 'reloading...'
       reload!
+	puts 'reloaded'
+
       puts 'loading records'
       load_integration_records
       puts 'records loaded'
@@ -49,11 +60,14 @@ class EnqueueingService
     private
 
     def reload!
+	puts 'cleaning integration records'
       integration_records.clear
+	puts 'reloading checkpoint'
       @checkpoint.reload!
     end
 
     def connect
+	puts 'connecting to database'
       begin
         ActiveRecord::Base.establish_connection(@db_conf)
       rescue Exception => e

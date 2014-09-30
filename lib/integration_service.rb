@@ -38,14 +38,17 @@ class IntegrationService
       end
 
     rescue Errno::ETIMEDOUT => error
-      changed
+puts "[erro] #{error}" 
+     changed
       notify_observers(ErrorMail.new("Local internet access or Abacos is down: #{error.message}"))
       sleep(@downtime_wait)
     rescue Wasabi::Resolver::HTTPError => error
+puts "[erro] #{error}" 
       changed
       notify_observers(ErrorMail.new("Error while communicating with Abacos. HTTP error code: #{error.message.code}"))
       sleep(@downtime_wait)
     rescue Exception => error
+puts "[erro] #{error}" 
       changed
       puts "#{error.message}"
       puts "#{error.backtrace.join("\n")}"
